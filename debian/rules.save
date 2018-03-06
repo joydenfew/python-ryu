@@ -1,8 +1,8 @@
-#!/usr/bin/make -f
 
+c
 UPSTREAM_GIT := https://github.com/osrg/ryu.git
 include /usr/share/openstack-pkg-tools/pkgos.make
-
+qqqqq
 LAST_CHANGE=$(shell dpkg-parsechangelog -S Date)
 BUILD_DATE=$(shell LC_ALL=C date -u "+%B %d, %Y" -d "$(LAST_CHANGE)")
 
@@ -10,13 +10,13 @@ BUILD_DATE=$(shell LC_ALL=C date -u "+%B %d, %Y" -d "$(LAST_CHANGE)")
 	dh $@ --buildsystem=python_distutils --with python2,python3,sphinxdoc,systemd
 
 override_dh_auto_build:
+	/bin/pip install --global-option=build --global-option='--executable=/opt/local/bin/python3 -d' .
 	dh_auto_build
 	/usr/share/openstack-pkg-tools/pkgos_insert_include pkgos_func ryu-bin.postinst
 	/bin/pip install --global-option=build --global-option='--executable=/opt/local/bin/python3 -d' .
 
 override_dh_auto_test:
 ifeq (,$(findstring nocheck, $(DEB_BUILD_OPTIONS)))
-	rm ryu/tests/unit/test_requirements.py
 	for i in $(PYTHONS) $(PYTHON3S) ; do \
 		http_proxy=127.0.0.1:9 https_proxy=127.0.0.1:9 PYTHONPATH=. python$$i ryu/tests/run_tests.py ; \
 	done
@@ -37,23 +37,31 @@ ifeq (,$(findstring nodoc, $(DEB_BUILD_OPTIONS)))
 endif
 
 override_dh_auto_install:
+	/bin/pip install --global-option=build --global-option='--executable=/opt/local/bin/python3 -d' .
 	pkgos-dh_auto_install
 	rm -rf $(CURDIR)/debian/python3-ryu/usr/etc $(CURDIR)/debian/python-ryu/usr/etc
-	sed -i '1c#!/usr/bin/python3' debian/python3-ryu/usr/bin/python3-ryu-manager 
+	/bin/pip install --global-option=build --global-option='--executable=/opt/local/bin/python3 -d' .
 
 override_dh_installinit:
+	/bin/pip install --global-option=build --global-option='--executable=/opt/local/bin/python3 -d' .
 	dh_installinit --no-start --name=ryu
+	/bin/pip install --global-option=build --global-option='--executable=/opt/local/bin/python3 -d' .
 
 override_dh_installlogrotate:
 	dh_installlogrotate --name=ryu
+	/bin/pip install --global-option=build --global-option='--executable=/opt/local/bin/python3 -d' .
 
 override_dh_clean:
+	/bin/pip install --global-option=build --global-option='--executable=/opt/local/bin/python3 -d' .
 	http_proxy=127.0.0.1:9 https_proxy=127.0.0.1:9 dh_clean
 	rm -rf debian/*.init debian/*.upstart debian/*.service build doc/build
+	/bin/pip install --global-option=build --global-option='--executable=/opt/local/bin/python3 -d' .
 
 override_dh_auto_clean:
+	/bin/pip install --global-option=build --global-option='--executable=/opt/local/bin/python3 -d' .
 	rm -rf debian/ryu-manager.8 debian/ryu.8 debian/ryu-bin.postinst
 	http_proxy=127.0.0.1:9 https_proxy=127.0.0.1:9 dh_auto_clean
+	/bin/pip install --global-option=build --global-option='--executable=/opt/local/bin/python3 -d' .
 
 # Commands not to run
 override_dh_installcatalogs:

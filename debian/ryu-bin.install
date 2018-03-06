@@ -1,4 +1,2 @@
-usr/bin/ryu-manager usr/bin
-usr/bin/ryu usr/bin
-debian/ryu.conf etc/ryu
 debian/log.conf etc/ryu
+debian/ryu.conf etc/ryu
